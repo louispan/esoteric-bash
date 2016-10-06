@@ -1,0 +1,15 @@
+# Keychain https://github.com/funtoo/keychain
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+enable-keychain() {
+    if type -t keychain > /dev/null; then
+        eval `keychain --eval id_rsa`
+    else
+        echo "WARN: keychain not installed. See https://github.com/funtoo/keychain"
+    fi
+}

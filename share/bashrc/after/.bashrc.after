@@ -1,0 +1,30 @@
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# enable resetting prompt to the leftmost position
+# `unset -f enable-reset-prompt` to disable
+if type -t enable-reset-prompt &> /dev/null; then
+    enable-reset-prompt
+fi
+
+# enable color prompt
+# 'unset -f enable-fancy-prompt` to disable
+if type -t enable-fancy-prompt &> /dev/null; then
+    enable-fancy-prompt
+fi
+
+# enable cwd in title bar
+# 'unset -f enable-cwd-title` to disable
+if type -t enable-cwd-title &> /dev/null; then
+    enable-cwd-title
+fi
+
+# `unset -f enable-keychain`
+if ! type -t gnome-keyring > /dev/null && type -t enable-keychain &> /dev/null; then
+    enable-keychain
+fi
+
+

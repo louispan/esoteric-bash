@@ -1,0 +1,111 @@
+#!/usr/bin/env sh
+
+# Bash color
+
+# http://invisible-island.net/xterm/ctlseqs/ctlseqs.html
+# CSI Pm m  Character Attributes (SGR).
+
+# 16 color mode
+export STYLE_NORMAL=0
+export STYLE_BOLD=1
+export STYLE_DIM=2
+export STYLE_ITALIC=3
+export STYLE_UNDERLINE=4
+export STYLE_BLINK=5
+export STYLE_INVERSE=7
+export STYLE_HIDDEN=8
+export STYLE_STRIKETHROUGH=9
+export STYLE_DOUBLE_UNDERLINE=21
+export STYLE_NOT_BOLD_OR_FAINT=22
+export STYLE_NOT_ITALICS=23
+export STYLE_NOT_UNDERLINE=24
+export STYLE_NOT_BLINK=25
+export STYLE_NOT_INVERSE=27
+export STYLE_NOT_HIDDEN=28
+export STYLE_NOT_STRIKETHROUGH=29
+export STYLE_FOREGROUND_BLACK=30
+export STYLE_FOREGROUND_RED=31
+export STYLE_FOREGROUND_GREEN=32
+export STYLE_FOREGROUND_YELLOW=33
+export STYLE_FOREGROUND_BLUE=34
+export STYLE_FOREGROUND_MAGENTA=35
+export STYLE_FOREGROUND_CYAN=36
+export STYLE_FOREGROUND_WHITE=37
+export STYLE_FOREGROUND_DEFAULT=39
+export STYLE_BACKGROUND_BLACK=40
+export STYLE_BACKGROUND_RED=41
+export STYLE_BACKGROUND_GREEN=42
+export STYLE_BACKGROUND_YELLOW=43
+export STYLE_BACKGROUND_BLUE=44
+export STYLE_BACKGROUND_MAGENTA=45
+export STYLE_BACKGROUND_CYAN=46
+export STYLE_BACKGROUND_WHITE=47
+export STYLE_BACKGROUND_DEFAULT=49
+# iff 16 color is supported
+export STYLE_FOREGROUND_BRIGHT_BLACK=90
+export STYLE_FOREGROUND_BRIGHT_RED=91
+export STYLE_FOREGROUND_BRIGHT_GREEN=92
+export STYLE_FOREGROUND_BRIGHT_YELLOW=93
+export STYLE_FOREGROUND_BRIGHT_BLUE=94
+export STYLE_FOREGROUND_BRIGHT_MAGENTA=95
+export STYLE_FOREGROUND_BRIGHT_CYAN=96
+export STYLE_FOREGROUND_BRIGHT_WHITE=97
+export STYLE_BACKGROUND_BRIGHT_BLACK=100
+export STYLE_BACKGROUND_BRIGHT_RED=101
+export STYLE_BACKGROUND_BRIGHT_GREEN=102
+export STYLE_BACKGROUND_BRIGHT_YELLOW=103
+export STYLE_BACKGROUND_BRIGHT_BLUE=104
+export STYLE_BACKGROUND_BRIGHT_MAGENTA=105
+export STYLE_BACKGROUND_BRIGHT_CYAN=106
+export STYLE_BACKGROUND_BRIGHT_WHITE=107
+
+# 16 color mode
+# Colors are set by <ESC>[code1;code2;codeN;m
+style_set() {
+    if [ "$#" -gt 0 ]; then
+        local var
+        var="STYLE_$1"
+        echo -en "\033[${!var}"
+        shift
+        for arg in "$@"
+        do
+            var="STYLE_$arg"
+            echo -n ";${!var}"
+        done
+        echo -n "m"
+    fi
+}
+export -f style_set
+
+# 256 mode foreground color number set by <ESC>[38;5;colorm
+foreground_color_num() {
+    if [ "$#" -gt 0 ]; then
+        echo -en "\033[38;5;$1"m
+    fi
+}
+export -f foreground_color_num
+
+# 256 mode background color number set by <ESC>[48;5;colorm
+background_color_num() {
+    if [ "$#" -gt 0 ]; then
+        echo -en "\033[48;5;$1"m
+    fi
+}
+export -f background_color_num
+
+# 256 mode foreground color rgb set by <ESC>[38;2;r;g;bm
+foreground_color_rgb() {
+    if [ "$#" -eq 3 ]; then
+        echo -en "\033[38;2;$1;$2;$3"m
+    fi
+}
+export -f foreground_color_rgb
+
+# 256 mode background color rgb set by <ESC>[48;2;r;g;bm
+background_color_rgb() {
+    if [ "$#" -eq 3 ]; then
+        echo -en "\033[48;2;$1;$2;$3"m
+    fi
+}
+export -f background_color_rgb
+

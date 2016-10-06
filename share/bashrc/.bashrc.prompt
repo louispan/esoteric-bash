@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+
+# Bash prompt
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# Expects `before/style.bashrc` to be already sourced
+
+# http://stackoverflow.com/questions/19943482/configure-shell-to-always-print-prompt-on-new-line-like-zsh
+# Make the prompt always appears on a newline, since the history up/down arrow keys assumes the prompt is always a certain distance from the left.
+# If the previous stdout doesn't end in newline a reverse colour % is printed.
+enable-reset-prompt() {
+  reset-prompt() {
+    # CSI 6n reports the cursor position as ESC[n;mR, where n is the row
+    # and m is the column. Issue this control sequence and silently read
+    # the resulting report until reaching the "R". By setting IFS to ";"
+    # in conjunction with read's -a flag, fields are placed in an array.
+    local curpos
+    # based on a script from http://invisible-island.net/xterm/xterm.faq.html
+    exec 9<> "$HOME/.prompt.tmp"
+    local oldstty
+    oldstty=$(stty -g)
+    stty raw -echo min 0
+    echo -en '\033[6n' >&9
+    IFS=';' read -u 9 -d R -a curpos
+    stty $oldstty
+    exec 3>&-
+    (( curpos[1] > 1 )) && echo -e '\033[7m%\033[0m'
+  }
+  PROMPT_COMMAND="${PROMPT_COMMAND%%'; '}" # remove ending ;
+  PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND; }"'reset-prompt'
+}
+
+# set a fancy prompt (non-color, unless we know we "want" color)
+enable-fancy-prompt() {
+    # set variable identifying the chroot you work in (used in the prompt below)
+    if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+        debian_chroot=$(cat /etc/debian_chroot)
+    fi
+
+    # git prompt
+    GIT_PS1_SHOWDIRTYSTATE=1
+    GIT_PS1_SHOWSTASHSTATE=1
+    GIT_PS1_SHOWUNTRACKEDFILES=1
+    GIT_PS1_SHOWUPSTREAM="auto"
+    GIT_PS1_DESCRIBE_STYLE="branch"
+    GIT_PS1_SHOWCOLORHINTS=1
+    local git_prompt
+    if [ -f "$HOME/opt/git/contrib/completion/git-prompt.sh" ]; then
+        . "$HOME/opt/git/contrib/completion/git-prompt.sh"
+        git_prompt='$(__git_ps1 "(%s)")'
+        # osx git-scm installer installs the contrib completion and prompt
+    elif [ -f /usr/local/git/contrib/completion/git-prompt.sh ]; then
+        . /usr/local/git/contrib/completion/git-prompt.sh
+        git_prompt='$(__git_ps1 "(%s)")'
+    else
+        git_prompt=''
+    fi
+
+    # TODO: check TERM for allowable colors
+    local PROMPT_COLOR_RESET
+    # NB "\[" and "\]" around the color escape sequences are prompt specific
+    # and it used to indicate that the escape sequences don't take up
+    # any prompt width
+    PROMPT_COLOR_RESET="\[$(style_set NORMAL)\]" # reset
+    if [ -z $PROMPT_COLOR_CHECK ]; then
+        PROMPT_COLOR_CHECK="\[$(foreground_color_num 2)\]" # green
+    fi
+    if [ -z $PROMPT_COLOR_UNCHECK ]; then
+        PROMPT_COLOR_UNCHECK="\[$(foreground_color_num 1)\]" # red
+    fi
+    if [ -z $PROMPT_COLOR_USER ]; then
+        PROMPT_COLOR_USER="\[$(foreground_color_num 45)\]" # light cyan
+    fi
+    if [ -z $PROMPT_COLOR_AT ]; then
+        PROMPT_COLOR_AT=$PROMPT_COLOR_RESET
+    fi
+    if [ -z $PROMPT_COLOR_HOST ]; then
+        PROMPT_COLOR_HOST="\[$(foreground_color_num 9)\]" # light red
+    fi
+    if [ -z $PROMPT_COLOR_WORKDIR ]; then
+        PROMPT_COLOR_WORKDIR="\[$(foreground_color_num 63)\]" # light purple-blue
+    fi
+    if [ -z $PROMPT_COLOR_GIT ]; then
+        PROMPT_COLOR_GIT="\[$(style_set NORMAL FOREGROUND_YELLOW)\]"
+    fi
+
+    PROMPT_CHECK="$PROMPT_COLOR_RESET$PROMPT_COLOR_CHECK\342\234\223$PROMPT_COLOR_RESET" # ✓
+    PROMPT_UNCHECK="$PROMPT_COLOR_RESET$PROMPT_COLOR_UNCHECK\342\234\227$PROMPT_COLOR_RESET" # ✗
+    PROMPT_EXITCODE="\$(if [[ \$? == 0 ]]; then echo '$PROMPT_CHECK'; else echo '$PROMPT_UNCHECK'; fi)"
+    PROMPT_USER="$PROMPT_COLOR_RESET$PROMPT_COLOR_USER\\u$PROMPT_COLOR_RESET"
+    PROMPT_HOST="$PROMPT_COLOR_RESET$PROMPT_COLOR_HOST\\h$PROMPT_COLOR_RESET"
+    PROMPT_GIT="$PROMPT_COLOR_RESET$PROMPT_COLOR_GIT$git_prompt$PROMPT_COLOR_RESET"
+    PROMPT_WORKDIR="$PROMPT_COLOR_RESET$PROMPT_COLOR_WORKDIR\\w$PROMPT_COLOR_RESET"
+    PS1='${debian_chroot:+($debian_chroot)}'"$PROMPT_EXITCODE$PROMPT_USER$PROMPT_COLOR_RESET@$PROMPT_HOST$PROMPT_COLOR_RESET:$PROMPT_WORKDIR$PROMPT_GIT$PROMPT_COLOR_RESET "
+
+    unset git_prompt
+}

@@ -1,0 +1,41 @@
+# bash history settings
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# Ignore duplicate commands, and some bash built-in commands
+# HISTIGNORE="&:hs:hs *:history:history *:[bf]g:exit:screen:screen *:tmux:tmux *"
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# puts the command to be executed after a substitution on command line as if you had typed it
+# otherwise use opt+shift+6 (^) to expand history substition
+# shopt -s histverify
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=50000
+HISTFILESIZE=50000
+
+#HISTTIMEFORMAT='%F %T '
+
+# erase dups manually
+# http://superuser.com/questions/722461/how-can-you-remove-duplicates-from-bash-history
+history-erase-dups() {
+    mv ~/.bash_history ~/.bash_history.bak
+    nl ~/.bash_history.bak | sort -k 2  -k 1,1nr| uniq -f 1 | sort -n | cut -f 2 > ~/.bash_history
+}
+
+history-sync() {
+    # Append the ``new'' history lines (history lines entered since the beginning of the current bash session) to the history file.
+    history -a
+    # Read the contents of the history file and use them as the current history.
+    history -r
+}

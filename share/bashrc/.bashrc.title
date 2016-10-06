@@ -1,0 +1,42 @@
+# Rename osx Terminal tab
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# function to print current working directory substituting ~ with home directory
+cwd() {
+  # http://www.blog.montgomerie.net/pwd-in-the-title-bar-or-a-regex-adventure-in-bash
+  local dir
+  dir="$PWD"     
+
+  # Substitute a leading path that's in $HOME for "~"
+  if [[ "$HOME" == ${dir:0:${#HOME}} ]] ; then
+    dir="~${dir:${#HOME}}"
+  fi
+  echo "$dir"
+}
+
+# $1 is the string to shorten
+# $2 is how many chars to keep in front
+# $3 is how many chars to keep in back
+shorten() {    
+    if [[ ${#1} -le $(($2 + $3 + 1)) ]]; then
+        echo "$1"
+    else
+        # echo first chars * then last chars
+        echo "${1:0:$2}*${1:$((${#1}-$3))}"
+    fi
+}
+
+case "$TERM" in
+    xterm*|rxvt*)
+        enable-cwd-title() {
+            # Add command to print cwd in title bar
+            PROMPT_COMMAND="${PROMPT_COMMAND%%'; '}"
+            PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND; }"'echo -ne "\033]0;$(hostname -s):$(cwd)\007"'
+        }
+    ;;
+esac

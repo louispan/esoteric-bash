@@ -1,0 +1,81 @@
+# To find out the character sequence of a key, press C-V, then the key
+# or run cat and then press the key
+# Also see ~/.vim/plugin/keys.vim for the saved terminal mappings
+
+#set editing-mode vi
+#set keymap visible
+
+# This make it easier to set readline bindings (allows the use of "M-blah")
+# set convert-meta on
+
+# This alters the default behavior of the completion functions. If set to on, words which have more than one possible completion cause the matches to be listed immediately instead of ringing the bell.
+set show-all-if-ambiguous on
+
+# This alters the default behavior of the completion functions in a fashion similar to show-all-if-ambiguous. If set to on, words which have more than one possible completion without any possible partial completion (the possible completions don't share a common prefix) cause the matches to be listed immediately instead of ringing the bell.
+set show-all-if-unmodified on
+
+# If set to On, completed names which are symbolic links to directories have a slash appended (subject to the value of mark-directories).
+set mark-symlinked-directories on
+
+# opt+left
+"\e[1;3D":backward-word
+
+# opt+right
+"\e[1;3C":forward-word
+
+# Default Home: beginning-of-line
+# ctrl+left
+"\e[1;5D":beginning-of-line
+
+# Default End: end-of-line
+# ctrl+right
+"\e[1;5C":end-of-line
+
+# Default <M-Bs>: "\e\C-?": backward-kill-word
+# "\e\C-?": backward-kill-word
+
+# <M-Del>: "\e[3;3~"
+"\e[3;3~":kill-word
+
+# Default "\C-u": unix-line-discard # kill to beginning of line
+# <C-BS>: "\e[72;8;5~" hijackey
+"\e[72;8;5~": unix-line-discard
+
+# Default "\C-k": kill-line
+# <C-Del>: "\e[3;5~"
+"\e[3;5~":kill-line
+
+# <C-S-Bs>: "\e[72;8;6~" hijackey
+"\e[72;8;6~": kill-whole-line # Default emacs binding
+
+# Default <C-_>: undo # undo changes to history
+
+# Default <C-y>: "\C-y": yank
+
+# Default <Up>: "\e[A": previous-history
+
+# Default <Down>: "\e[B": next-history
+
+# Default <C-r>: "\C-r": reverse-search-history # (cannot be remapped to a meta/esc key)
+
+# Default <C-s>: "\C-s": forward-search-history # (cannot be remapped to a meta/esc key)
+
+# Default: <M-S-8>: "\e*": insert-completions
+
+# Default: <C-_>: <C-S-_>: "\C-_": undo
+
+# Default: <M-S-6>: "\e^": history-expand-line
+
+# History: `man bash`, `/event designator` for more details
+# !*    all the words except the command
+# !*:h  all the and get head (dirname) of last word
+# !*:r  all the and get basename (strip out .xxx) of last word
+
+# <S-SPACE>: "\e[72;32;2~" hijackey
+"\e[72;32;2~": " " # Same as normal space
+
+# <S-BS>: "\e[72;8;2~" hijackey
+"\e[72;8;2~": "\C-?" # Same as normal delete
+
+# <S-CR>: "\eOM"
+#"\eOM": "\C-M"

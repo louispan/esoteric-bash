@@ -1,0 +1,87 @@
+# Bash aliases
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# enable color support of ls and also add handy aliases
+if [[ "$OSTYPE" == "darwin"* ]] || [ -x /usr/bin/dircolors ]; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        alias ls='ls -G'
+    else
+        # load custom .dircolors
+        test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+        alias ls='ls --color=auto'
+        #alias dir='dir --color=auto'
+        #alias vdir='vdir --color=auto'
+    fi
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# custom aliases
+
+# Make some possibly destructive commands more interactive.
+# alias rm='rm -i'
+# alias mv='mv -i'
+# alias cp='cp -i'
+
+# top processes
+alias pst='ps -o pcpu -elf -o command | sort -k 1 -r'
+# current user processes` long format
+# -x for non-tty process
+# -e for everyone's processes
+# alias psl='ps -lf'
+
+# login shell: eg. remote ssh, opening text terminal
+# non-login shell: eg. subprocesses, new graphical terminal window
+alias islogin="shopt -q login_shell"
+alias plogin="islogin && echo 'Login shell' || echo 'Not login shell'"
+
+# interative: eg. using a terminal
+# non-interactive: eg. cron job
+alias isinteractive="[[ $- == *i* ]]"
+alias pinteractive="isinteractive && echo 'Interactive' || echo 'Not interactive'"
+
+# history grep
+# use !number to get the history command.
+# if histverify shopt is on, the history substitution can be edited on the command line
+alias hgrep="history | grep"
+
+# save the command into history without executing it
+alias hs="history -s"
+
+# allow aliases when sudoing
+alias sudo="sudo "
+
+if [ -z "$SSH_CLIENT" ] && [ -z "$SSH_TTY"]; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        alias subl='"/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"'
+    fi
+else
+    # remote text editing using sublime, requires RemoteForward in .ssh/config
+    alias subl='rmate -p 62700'
+fi
+
+# Emacs
+# Use 'emc -f SERVERNAME' to connect to a specific server
+em() {
+     emacsclient --alternate-editor='' "$@" &
+}
+
+emc() {
+     emacsclient --alternate-editor='' -c "$@" &
+}

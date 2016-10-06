@@ -1,0 +1,35 @@
+# bash paths
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# http://superuser.com/questions/39751/add-directory-to-path-if-its-not-already-there
+# http://stackoverflow.com/questions/370047/what-is-the-most-elegant-way-to-remove-a-path-from-the-path-variable-in-bash
+idempotent_path_prepend() {
+    PATH=${PATH/":$1"/} #delete any instances in the middle or at the end
+    PATH=${PATH/"$1:"/} #delete any instances at the beginning
+    PATH="$1:$PATH" #prepend to beginning
+}
+
+# use git-scm if available
+idempotent_path_prepend "/usr/local/git/bin"
+
+# Add macports path
+idempotent_path_prepend "/opt/local/sbin"
+idempotent_path_prepend "/opt/local/bin"
+
+# Add homebrew path
+idempotent_path_prepend "/usr/local/bin"
+
+# set PATH so it includes user's private bin
+idempotent_path_prepend "$HOME/bin"
+
+# extra path for osx
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    idempotent_path_prepend "$HOME/bin/osx"
+fi
+
+export PATH

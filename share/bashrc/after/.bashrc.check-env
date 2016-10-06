@@ -1,0 +1,18 @@
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# final checks
+check-env() {
+    if [ $# -lt 1 ]; then
+        echo "ERROR: check-env needs at least one valid arg"
+        return
+    fi
+    if [ -z "$2" ]; then
+        echo "WARN: $1 not set"
+    else
+        echo "INFO: $1=$2"
+    fi
+}
