@@ -1,9 +1,0 @@
-# Bash aliases
-
-# If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-      *) return;;
-esac
-
-export EDITOR=vim

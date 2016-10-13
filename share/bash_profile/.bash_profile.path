@@ -1,10 +1,7 @@
 # bash paths
 
-# If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-      *) return;;
-esac
+# If not running login, don't do anything
+shopt -q login_shell || return
 
 # http://superuser.com/questions/39751/add-directory-to-path-if-its-not-already-there
 # http://stackoverflow.com/questions/370047/what-is-the-most-elegant-way-to-remove-a-path-from-the-path-variable-in-bash

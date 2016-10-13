@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+# If not running login, don't do anything
+shopt -q login_shell || return
 
 # Get SOURCE_DIR resolving symbolic links
 # http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in/246128#246128
@@ -14,4 +15,3 @@ SOURCE_DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 if [[ ! "$PATH" =~ "$SOURCE_DIR" ]]; then
   export PATH="$SOURCE_DIR:$PATH"
 fi
-
