@@ -40,7 +40,7 @@ append_source() {
     append_line "[ -f \"$1\" ] && source \"$1\" || true" "$2"
 }
 
-append_source "$SOURCE_DIR/bin/path.bash_profile" "$HOME/.bash_profile"
+append_source "$SOURCE_DIR/bin/path.bash_profile" "$HOME/.bash_profile.before.local"
 append_source "$SOURCE_DIR/share/.bash_profile.source" "$HOME/.bash_profile"
 append_source "$SOURCE_DIR/share/.bashrc.source" "$HOME/.bashrc"
 
