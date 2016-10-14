@@ -1,6 +1,5 @@
 # To find out the character sequence of a key, press C-V, then the key
 # or run cat and then press the key
-# Also see ~/.vim/plugin/keys.vim for the saved terminal mappings
 
 #set editing-mode vi
 #set keymap visible
@@ -19,17 +18,21 @@ set mark-symlinked-directories on
 
 # opt+left
 "\e[1;3D":backward-word
+"\e\e[D":backward-word
 
 # opt+right
 "\e[1;3C":forward-word
+"\e\e[C":forward-word
 
 # Default Home: beginning-of-line
 # ctrl+left
 "\e[1;5D":beginning-of-line
+"\e[OD":beginning-of-line
 
 # Default End: end-of-line
 # ctrl+right
 "\e[1;5C":end-of-line
+"\e[OC":end-of-line
 
 # Default <M-Bs>: "\e\C-?": backward-kill-word
 # "\e\C-?": backward-kill-word
