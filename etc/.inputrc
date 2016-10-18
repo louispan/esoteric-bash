@@ -28,11 +28,13 @@ set mark-symlinked-directories on
 # ctrl+left
 "\e[1;5D":beginning-of-line
 "\e[OD":beginning-of-line
+"\e[1~":beginning-of-line
 
 # Default End: end-of-line
 # ctrl+right
 "\e[1;5C":end-of-line
 "\e[OC":end-of-line
+"\e[4~":end-of-line
 
 # Default <M-Bs>: "\e\C-?": backward-kill-word
 # "\e\C-?": backward-kill-word
