@@ -28,22 +28,26 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 SOURCE_DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
+# save $SOURCE_DIR since it may be overwritten by sourcing other files
+BASH_PROFILE_SOURCE_DIR="$SOURCE_DIR"
+
 [ -f "$HOME/.bash_profile.before.local" ] && source "$HOME/.bash_profile.before.local" || true
 
 # Automatically source scripts
-for f in "$SOURCE_DIR/bash_profile/before/.bash_profile."*""; do
+for f in "$BASH_PROFILE_SOURCE_DIR/bash_profile/before/.bash_profile."*""; do
     [ -f "$f" ] && source "$f" || true
 done
 
-for f in "$SOURCE_DIR/bash_profile/.bash_profile."*""; do
+for f in "$BASH_PROFILE_SOURCE_DIR/bash_profile/.bash_profile."*""; do
     [ -f "$f" ] && source "$f" || true
 done
 
 [ -f "$HOME/.bash_profile.local" ] && source "$HOME/.bash_profile.local" || true
 
-for f in "$SOURCE_DIR/bash_profile/after/.bash_profile."*""; do
+for f in "$BASH_PROFILE_SOURCE_DIR/bash_profile/after/.bash_profile."*""; do
     [ -f "$f" ] && source "$f" || true
 done
 
 [ -f "$HOME/.bash_profile.after.local" ] && source "$HOME/.bash_profile.after.local" || true
 
+unset BASH_PROFILE_SOURCE_DIR

@@ -44,16 +44,18 @@ append_source "$SOURCE_DIR/bin/path.bash_profile" "$HOME/.bash_profile.before.lo
 append_source "$SOURCE_DIR/share/.bash_profile.source" "$HOME/.bash_profile"
 append_source "$SOURCE_DIR/share/.bashrc.source" "$HOME/.bashrc"
 
-link "$SOURCE_DIR/share/.bashrc.source" "$HOME/.bashrc.source"
-link "$SOURCE_DIR/share/.bash_profile.source" "$HOME/.bash_profile.source"
-
 append_line "\$include $SOURCE_DIR/etc/.inputrc" "$HOME/.inputrc"
 
 # install keychain (only if gnome-keyring is not available)
 if ! type -t gnome-keyring > /dev/null; then
-    if ! which keychain &> /dev/null && [ ! -a "$HOME/opt/keychain" ]; then
+    if ! which keychain &> /dev/null && [ ! -e "$HOME/opt/keychain" ]; then
         mkdir -p "$HOME/opt"
-        cd "$HOME/opt" && git clone https://github.com/funtoo/keychain.git && cd "$HOME/opt/keychain" && make && symlink_relative "$HOME/opt/keychain/keychain" "$HOME/bin/keychain"
+        mkdir -p "$HOME/bin"
+	if [ ! -e "$HOME/opt/keychain" ]; then
+	    echo "hihi"
+	    cd "$HOME/opt" && git clone https://github.com/funtoo/keychain.git && cd "$HOME/opt/keychain" && make
+        fi
+        link "$HOME/opt/keychain/keychain" "$HOME/bin/keychain"
     fi
 fi
 

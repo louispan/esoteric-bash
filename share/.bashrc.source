@@ -31,22 +31,26 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 SOURCE_DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
+# save $SOURCE_DIR since it may be overwritten by sourcing other files
+BASHRC_SOURCE_DIR="$SOURCE_DIR"
+
 [ -f "$HOME/.bashrc.before.local" ] && source "$HOME/.bashrc.before.local" || true
 
 # Automatically source scripts
-for f in "$SOURCE_DIR/bashrc/before/.bashrc."*""; do
+for f in "$BASHRC_SOURCE_DIR/bashrc/before/.bashrc."*""; do
     [ -f "$f" ] && source "$f" || true
 done
 
-for f in "$SOURCE_DIR/bashrc/.bashrc."*""; do
+for f in "$BASHRC_SOURCE_DIR/bashrc/.bashrc."*""; do
     [ -f "$f" ] && source "$f" || true
 done
 
 [ -f "$HOME/.bashrc.local" ] && source "$HOME/.bashrc.local" || true
 
-for f in "$SOURCE_DIR/bashrc/after/.bashrc."*""; do
+for f in "$BASHRC_SOURCE_DIR/bashrc/after/.bashrc."*""; do
     [ -f "$f" ] && source "$f" || true
 done
 
 [ -f "$HOME/.bashrc.after.local" ] && source "$HOME/.bashrc.after.local" || true
 
+unset BASHRC_SOURCE_DIR
