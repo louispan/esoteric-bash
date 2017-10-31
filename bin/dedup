@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  TAC=gtac
+else
+  TAC=tac
+fi
+
+"$TAC" | nl | sort -k 2 | uniq -f 1 | sort -n | cut -f 2 | "$TAC"
